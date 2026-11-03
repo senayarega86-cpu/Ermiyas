@@ -26,17 +26,17 @@ if errorlevel 1 (
 echo.
 echo  Waiting for the website to be ready...
 :wait
-curl -s -o nul http://localhost:3000/en
+curl -s -o nul http://localhost:3080/en
 if errorlevel 1 (
   timeout /t 3 /nobreak >nul
   goto wait
 )
-start http://localhost:3000
-start http://localhost:3000/admin
+start http://localhost:3080
+start http://localhost:3080/admin
 echo.
 echo  READY!
-echo    Website: http://localhost:3000
-echo    Admin:   http://localhost:3000/admin
+echo    Website: http://localhost:3080
+echo    Admin:   http://localhost:3080/admin
 echo    Email:   admin@ethiopianchamber.com
 echo    Password: Eccsa@2026!
 echo.

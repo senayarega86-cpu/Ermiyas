@@ -38,8 +38,8 @@ The new website of the **Ethiopian Chamber of Commerce and Sectoral Associations
 2. Download this project (GitHub → **Code → Download ZIP**) and unzip it.
 3. Double-click **`START-ECCSA-WINDOWS.bat`** (Windows) or **`START-ECCSA-MAC.command`** (Mac).
 4. Wait 5–15 minutes the first time. The website and admin open in your browser:
-   - Website: http://localhost:3000
-   - Admin: http://localhost:3000/admin — `admin@ethiopianchamber.com` / `Eccsa@2026!`
+   - Website: http://localhost:3080
+   - Admin: http://localhost:3080/admin — `admin@ethiopianchamber.com` / `Eccsa@2026!`
 5. To stop it, double-click **`STOP-ECCSA-…`**. Your changes are kept for next time.
 
 This desktop preview uses its own built-in passwords and is **not** meant for the live server.

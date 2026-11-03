@@ -1,10 +1,12 @@
 # Runs the ECCSA website on your own computer (for previewing only, not for the live site).
 # Start: double-click START-ECCSA-WINDOWS.bat (Windows) or START-ECCSA-MAC.command (Mac)
 # or run:  docker compose -f docker-compose.desktop.yml up -d --build
+name: eccsa-website
+
 x-env: &env
   DATABASE_URL: postgres://eccsa:eccsa@postgres:5432/eccsa
   PAYLOAD_SECRET: local-desktop-preview-secret-change-on-server
-  NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+  NEXT_PUBLIC_SERVER_URL: http://localhost:3080
   SEED_ADMIN_EMAIL: admin@ethiopianchamber.com
   SEED_ADMIN_PASSWORD: Eccsa@2026!
 
@@ -44,7 +46,7 @@ services:
     build: .
     environment: *env
     ports:
-      - '3000:3000'
+      - '3080:3000'
     depends_on:
       seed:
         condition: service_completed_successfully
