@@ -1,0 +1,48 @@
+# Production setup: website + PostgreSQL on one server.
+#   1. cp .env.example .env   and fill in the values (DATABASE_URL host must be "postgres")
+#   2. docker compose up -d --build
+#   3. First time only, load ECCSA's content:   docker compose run --rm seed
+# Uploaded images and PDFs are kept in the "media" and "publications" volumes, the database in "pgdata".
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - '3000:3000'
+    env_file: .env
+    depends_on:
+      - postgres
+    volumes:
+      - media:/app/media
+      - publications:/app/publications
+
+  # One-off job that fills the database with the starting content (uses the same upload volumes).
+  seed:
+    image: node:22-alpine
+    profiles: ['tools']
+    working_dir: /src
+    env_file: .env
+    depends_on:
+      - postgres
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile && NODE_ENV=production pnpm seed"
+    volumes:
+      - .:/src
+      - seed_node_modules:/src/node_modules
+      - media:/src/media
+      - publications:/src/publications
+
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-eccsa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: ${POSTGRES_DB:-eccsa}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  seed_node_modules:
+  pgdata:
+  media:
+  publications:
