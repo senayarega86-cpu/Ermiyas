@@ -1,7 +1,7 @@
 {
   "name": "eccsa-website",
   "version": "1.0.0",
-  "description": "ECCSA website — Next.js + Payload CMS",
+  "description": "ECCSA website \u2014 Next.js + Payload CMS",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -51,5 +51,6 @@
       "esbuild",
       "unrs-resolver"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.28.0"
 }

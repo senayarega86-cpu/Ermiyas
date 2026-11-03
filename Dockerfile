@@ -2,6 +2,7 @@
 # From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 
 FROM node:22.23.4-alpine AS base
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
 # Install dependencies only when needed
 FROM base AS deps

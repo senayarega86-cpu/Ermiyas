@@ -1,0 +1,59 @@
+# Runs the ECCSA website on your own computer (for previewing only, not for the live site).
+# Start: double-click START-ECCSA-WINDOWS.bat (Windows) or START-ECCSA-MAC.command (Mac)
+# or run:  docker compose -f docker-compose.desktop.yml up -d --build
+x-env: &env
+  DATABASE_URL: postgres://eccsa:eccsa@postgres:5432/eccsa
+  PAYLOAD_SECRET: local-desktop-preview-secret-change-on-server
+  NEXT_PUBLIC_SERVER_URL: http://localhost:3000
+  SEED_ADMIN_EMAIL: admin@ethiopianchamber.com
+  SEED_ADMIN_PASSWORD: Eccsa@2026!
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: eccsa
+      POSTGRES_PASSWORD: eccsa
+      POSTGRES_DB: eccsa
+    volumes:
+      - desktop_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U eccsa -d eccsa']
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  # Loads ECCSA's starting content the first time (skips itself when content already exists).
+  seed:
+    image: node:22.23.4-alpine
+    working_dir: /src
+    environment:
+      <<: *env
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: '0'
+    command: sh -c "corepack enable && pnpm install --frozen-lockfile && NODE_ENV=production pnpm seed && chown -R 1001:1001 /src/media /src/publications"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/src
+      - desktop_node_modules:/src/node_modules
+      - desktop_media:/src/media
+      - desktop_publications:/src/publications
+
+  app:
+    build: .
+    environment: *env
+    ports:
+      - '3000:3000'
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    volumes:
+      - desktop_media:/app/media
+      - desktop_publications:/app/publications
+
+volumes:
+  desktop_pgdata:
+  desktop_node_modules:
+  desktop_media:
+  desktop_publications:
