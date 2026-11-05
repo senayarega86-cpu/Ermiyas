@@ -872,21 +872,30 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface HomePage {
   id: number;
-  hero: {
-    badgeLabel?: string | null;
-    badgeText?: string | null;
-    title: string;
-    highlight?: string | null;
-    lead?: string | null;
-    image?: (number | null) | Media;
-    primary?: {
-      label?: string | null;
-      url?: string | null;
-    };
-    secondary?: {
-      label?: string | null;
-      url?: string | null;
-    };
+  hero?: {
+    slides?:
+      | {
+          /**
+           * Wide photo, at least 1920 × 1000 pixels.
+           */
+          image: number | Media;
+          badgeLabel?: string | null;
+          badgeText?: string | null;
+          title: string;
+          highlight?: string | null;
+          lead?: string | null;
+          primary?: {
+            label?: string | null;
+            url?: string | null;
+          };
+          secondary?: {
+            label?: string | null;
+            url?: string | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+    interval?: number | null;
   };
   stats?:
     | {
@@ -1466,24 +1475,30 @@ export interface HomePageSelect<T extends boolean = true> {
   hero?:
     | T
     | {
-        badgeLabel?: T;
-        badgeText?: T;
-        title?: T;
-        highlight?: T;
-        lead?: T;
-        image?: T;
-        primary?:
+        slides?:
           | T
           | {
-              label?: T;
-              url?: T;
+              image?: T;
+              badgeLabel?: T;
+              badgeText?: T;
+              title?: T;
+              highlight?: T;
+              lead?: T;
+              primary?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                  };
+              secondary?:
+                | T
+                | {
+                    label?: T;
+                    url?: T;
+                  };
+              id?: T;
             };
-        secondary?:
-          | T
-          | {
-              label?: T;
-              url?: T;
-            };
+        interval?: T;
       };
   stats?:
     | T

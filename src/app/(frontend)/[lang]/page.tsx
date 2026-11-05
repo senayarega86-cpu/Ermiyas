@@ -5,6 +5,7 @@ import { formatDate, getDictionary, href, type Locale } from '@/i18n'
 import { alt, formatBytes, getClient, getGlobal, img } from '@/lib/payload'
 import { Icon, Rays } from '@/components/Icon'
 import { NewsCard } from '@/components/NewsCard'
+import { HeroSlider, type Slide } from '@/components/HeroSlider'
 
 export default async function Home({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = await params
@@ -23,25 +24,21 @@ export default async function Home({ params }: { params: Promise<{ lang: Locale 
   const [lead, ...side] = news.docs
   const logos = partners.docs.map((p: Partner) => ({ name: p.name, src: img(p.logoOnDark) || img(p.logo) })).filter((p) => p.src)
   const pubLimit = home.publications?.limit || 2
+  const slides: Slide[] = (hero?.slides || []).map((s, i) => ({
+    id: s.id || String(i),
+    image: img(s.image, 'large'),
+    imageAlt: alt(s.image),
+    badgeLabel: s.badgeLabel, badgeText: s.badgeText, title: s.title, highlight: s.highlight, lead: s.lead,
+    primary: s.primary?.label ? { label: s.primary.label, href: h(s.primary.url) } : null,
+    secondary: s.secondary?.label ? { label: s.secondary.label, href: h(s.secondary.url) } : null,
+  }))
+  const sliderLabels = lang === 'am'
+    ? { prev: 'ቀዳሚ', next: 'ቀጣይ', goTo: 'ወደ ስላይድ', pause: 'አቁም', play: 'ቀጥል' }
+    : { prev: 'Previous slide', next: 'Next slide', goTo: 'Go to slide', pause: 'Pause', play: 'Play' }
 
   return (
     <>
-      <section className="hero">
-        
-        <div className="hero__bg">{img(hero?.image, 'large') && <img src={img(hero?.image, 'large')} alt="" fetchPriority="high" />}</div>
-        <Rays className="hero__rays" />
-        <div className="container">
-          <div className="hero__content">
-            {(hero?.badgeLabel || hero?.badgeText) && <span className="hero__badge reveal">{hero.badgeLabel && <b>{hero.badgeLabel}</b>}{hero.badgeText}</span>}
-            <h1 className="reveal" data-delay="1">{hero?.title} {hero?.highlight && <span className="hl-gold">{hero.highlight}</span>}</h1>
-            {hero?.lead && <p className="hero__lead reveal" data-delay="2">{hero.lead}</p>}
-            <div className="hero__actions reveal" data-delay="3">
-              {hero?.primary?.label && <Link className="btn btn--gold" href={h(hero.primary.url)}>{hero.primary.label} <Icon name="arrow" /></Link>}
-              {hero?.secondary?.label && <Link className="btn btn--ghost" href={h(hero.secondary.url)}>{hero.secondary.label}</Link>}
-            </div>
-          </div>
-        </div>
-      </section>
+      {slides.length > 0 && <HeroSlider slides={slides} interval={hero?.interval || 7} labels={sliderLabels} />}
 
       {!!home.stats?.length && (
         <div className="stats-wrap">

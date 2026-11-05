@@ -57,11 +57,56 @@ async function wipe(payload: Payload) {
   }
 }
 
+/* ---------- home slider: starting slides (English + Amharic) ---------- */
+const extraSlides = (img: { delegation?: number; meeting?: number }) => [
+  {
+    image: img.delegation!,
+    en: { badgeLabel: 'TRADE & INVESTMENT', badgeText: 'Ethio-Chamber International Trade Fair', title: 'Connecting Ethiopian business to', highlight: 'global markets',
+      lead: 'Trade fairs, B2B meetings and investment forums that link Ethiopian exporters, importers and investors with new partners and opportunities.',
+      primary: { label: 'Our Services', url: '/services' }, secondary: { label: 'Upcoming Events', url: '/events' } },
+    am: { badgeLabel: 'ንግድና ኢንቨስትመንት', badgeText: 'የኢትዮ-ቻምበር ዓለም አቀፍ የንግድ ትርዒት', title: 'የኢትዮጵያን ንግድ ከ', highlight: 'ዓለም ገበያ ጋር እናገናኛለን',
+      lead: 'ላኪዎችን፣ አስመጪዎችንና ባለሀብቶችን ከአዳዲስ አጋሮችና ዕድሎች ጋር የሚያገናኙ የንግድ ትርዒቶችና የኢንቨስትመንት መድረኮች።',
+      primary: { label: 'አገልግሎቶቻችን', url: '/services' }, secondary: { label: 'መጪ ዝግጅቶች', url: '/events' } },
+  },
+  {
+    image: img.meeting!,
+    en: { badgeLabel: 'MEMBERSHIP', badgeText: 'Regional, city & sectoral chambers', title: 'One strong network across every', highlight: 'region and sector',
+      lead: 'Join through your local chamber or sectoral association and gain market access, training, business advice and a voice in national policy.',
+      primary: { label: 'Become a Member', url: '/membership#join' }, secondary: { label: 'Find Your Chamber', url: '/membership#directory' } },
+    am: { badgeLabel: 'አባልነት', badgeText: 'የክልል፣ የከተማና የዘርፍ ምክር ቤቶች', title: 'በሁሉም ክልልና ዘርፍ', highlight: 'አንድ ጠንካራ ትስስር',
+      lead: 'በአካባቢዎ ምክር ቤት ወይም በዘርፍ ማኅበርዎ በኩል አባል ይሁኑ፤ የገበያ ዕድል፣ ሥልጠና፣ የንግድ ምክርና በብሔራዊ ፖሊሲ ላይ ድምፅ ያግኙ።',
+      primary: { label: 'አባል ይሁኑ', url: '/membership#join' }, secondary: { label: 'ምክር ቤትዎን ያግኙ', url: '/membership#directory' } },
+  },
+]
+
+/** Adds the two extra starting slides to a site that still has only its original banner. */
+async function topUpSlides(payload: Payload) {
+  const home = (await payload.findGlobal({ slug: 'home-page', locale: 'en', depth: 0 })) as Record<string, any>
+  const slides = (home.hero?.slides || []) as Record<string, any>[]
+  if (slides.length !== 1 || !String(slides[0].id || '').startsWith('migrated-slide')) return
+  const find = async (alt: string) => (await payload.find({ collection: 'media', where: { alt: { equals: alt } }, limit: 1, depth: 0 })).docs[0]?.id as number | undefined
+  const extra = extraSlides({
+    delegation: await find('ECCSA leadership with an international business delegation'),
+    meeting: await find('ECCSA meeting with development partners'),
+  }).filter((x) => x.image)
+  if (!extra.length) return
+  console.log('Adding new slides to the home page slider…')
+  const { id: _i, updatedAt: _u, createdAt: _c, globalType: _g, ...rest } = home
+  const enSlides = [...slides, ...extra.map((x) => ({ image: x.image, ...x.en }))]
+  const saved = (await payload.updateGlobal({ slug: 'home-page', locale: 'en', data: { ...rest, hero: { ...rest.hero, slides: enSlides } } as never })) as Record<string, any>
+  const ids = (saved.hero.slides as Record<string, any>[]).map((x) => x.id)
+  const amHome = (await payload.findGlobal({ slug: 'home-page', locale: 'am', depth: 0, fallbackLocale: false as never })) as Record<string, any>
+  const { id: _i2, updatedAt: _u2, createdAt: _c2, globalType: _g2, ...amRest } = amHome
+  const amSlides = (saved.hero.slides as Record<string, any>[]).map((x, i) => (i === 0 ? { ...x, ...(amHome.hero?.slides?.[0] || {}), id: ids[0] } : { ...x, ...extra[i - 1].am, id: ids[i] }))
+  await payload.updateGlobal({ slug: 'home-page', locale: 'am', data: { ...rest, ...amRest, hero: { ...rest.hero, slides: amSlides } } as never })
+}
+
 async function main() {
   const payload = await getPayload({ config })
 
   const existing = await payload.count({ collection: 'services' })
   if (existing.totalDocs > 0 && !force) {
+    await topUpSlides(payload)
     console.log('Database already has content. Run "pnpm seed:fresh" to replace it.')
     process.exit(0)
   }
@@ -266,10 +311,16 @@ async function main() {
 
   await payload.updateGlobal({ slug: 'home-page', data: {
     hero: {
-      badgeLabel: 'SINCE 1947', badgeText: "The apex body of Ethiopia's private sector",
-      title: "Transforming Ethiopia's", highlight: 'Private Sector',
-      lead: 'ECCSA is the voice of businesses: advocating policy improvements, enhancing trade opportunities and fostering capacity-building for a thriving, globally competitive and investment-friendly economy.',
-      image: m.hero, primary: { label: 'Become a Member', url: '/membership#join' }, secondary: { label: 'Explore Our Services', url: '/services' },
+      interval: 7,
+      slides: [
+        {
+          image: m.hero, badgeLabel: 'SINCE 1947', badgeText: "The apex body of Ethiopia's private sector",
+          title: "Transforming Ethiopia's", highlight: 'Private Sector',
+          lead: 'ECCSA is the voice of businesses: advocating policy improvements, enhancing trade opportunities and fostering capacity-building for a thriving, globally competitive and investment-friendly economy.',
+          primary: { label: 'Become a Member', url: '/membership#join' }, secondary: { label: 'Explore Our Services', url: '/services' },
+        },
+        ...extraSlides(m).map((x) => ({ image: x.image, ...x.en })),
+      ],
     },
     stats: [
       { value: 75, suffix: '+', label: 'Years serving business', icon: 'building' },
@@ -313,9 +364,11 @@ async function main() {
   const { id: _id, updatedAt: _u, createdAt: _c, globalType: _g, ...home } = (await payload.findGlobal({ slug: 'home-page', locale: 'en', depth: 0 })) as Record<string, any>
   await payload.updateGlobal({ slug: 'home-page', locale: 'am', data: {
     ...home,
-    hero: { ...home.hero, badgeLabel: 'ከ1939 ዓ.ም ጀምሮ', badgeText: 'የኢትዮጵያ የግሉ ዘርፍ የበላይ አካል', title: 'የኢትዮጵያን', highlight: 'የግል ዘርፍ እናሳድጋለን',
+    hero: { ...home.hero, slides: (home.hero.slides as Record<string, any>[]).map((sl, i) => ({ ...sl, ...(i === 0 ? {
+      badgeLabel: 'ከ1939 ዓ.ም ጀምሮ', badgeText: 'የኢትዮጵያ የግሉ ዘርፍ የበላይ አካል', title: 'የኢትዮጵያን', highlight: 'የግል ዘርፍ እናሳድጋለን',
       lead: 'ምክር ቤቱ የንግዱ ማኅበረሰብ ድምፅ ነው፤ የፖሊሲ ማሻሻያዎችን ይሟገታል፣ የንግድ ዕድሎችን ያሰፋል፣ ተወዳዳሪና ለኢንቨስትመንት ምቹ ኢኮኖሚ እንዲፈጠር አቅም ይገነባል።',
-      primary: { label: 'አባል ይሁኑ', url: '/membership#join' }, secondary: { label: 'አገልግሎቶቻችን', url: '/services' } },
+      primary: { label: 'አባል ይሁኑ', url: '/membership#join' }, secondary: { label: 'አገልግሎቶቻችን', url: '/services' },
+    } : extraSlides(m)[i - 1]?.am) })) },
     stats: (home.stats || []).map((s: Record<string, unknown>, i: number) => ({ ...s, label: ['ዓመታት በአገልግሎት', 'አባል ምክር ቤቶችና ማኅበራት', 'ዓለም አቀፍ የንግድ ትርዒቶች', 'የተረጋገጡ አሠልጣኞች'][i] })),
     news: { ...home.news, eyebrow: 'ዜናና መረጃ', title: 'ከምክር ቤቱ አዳዲስ ዜናዎች', buttonLabel: 'ሁሉም ዜናዎች' },
   } as never })

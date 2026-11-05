@@ -19,15 +19,24 @@ export const HomePage: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Banner',
+          label: 'Slider',
           name: 'hero',
+          description: 'The large slider at the top of the home page. Add, remove or drag slides to reorder them.',
           fields: [
-            { type: 'row', fields: [{ name: 'badgeLabel', type: 'text', localized: true }, { name: 'badgeText', type: 'text', localized: true }] },
-            { type: 'row', fields: [{ name: 'title', type: 'text', localized: true, required: true }, { name: 'highlight', label: 'Highlighted words (gold)', type: 'text', localized: true }] },
-            { name: 'lead', type: 'textarea', localized: true },
-            { name: 'image', type: 'upload', relationTo: 'media' },
-            link('primary', 'Main button'),
-            link('secondary', 'Second button'),
+            {
+              name: 'slides', type: 'array', minRows: 1, maxRows: 8,
+              labels: { singular: 'Slide', plural: 'Slides' },
+              admin: { initCollapsed: true, components: { RowLabel: '@/components/admin/SlideLabel#SlideLabel' } },
+              fields: [
+                { name: 'image', type: 'upload', relationTo: 'media', required: true, admin: { description: 'Wide photo, at least 1920 × 1000 pixels.' } },
+                { type: 'row', fields: [{ name: 'badgeLabel', type: 'text', localized: true }, { name: 'badgeText', type: 'text', localized: true }] },
+                { type: 'row', fields: [{ name: 'title', type: 'text', localized: true, required: true }, { name: 'highlight', label: 'Highlighted words (gold)', type: 'text', localized: true }] },
+                { name: 'lead', type: 'textarea', localized: true },
+                link('primary', 'Main button'),
+                link('secondary', 'Second button'),
+              ],
+            },
+            { name: 'interval', label: 'Seconds per slide', type: 'number', defaultValue: 7, min: 3, max: 30 },
           ],
         },
         {
