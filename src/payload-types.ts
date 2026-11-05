@@ -156,6 +156,8 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Write and publish news articles. Untick "Show in ticker" to keep an article out of the top news bar.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "news".
  */
@@ -195,6 +197,8 @@ export interface News {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * All photos used on the website. Always add a short description.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -240,6 +244,8 @@ export interface Media {
   };
 }
 /**
+ * Trade fairs, forums and workshops. Upcoming and past events are sorted automatically by date.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events".
  */
@@ -275,6 +281,8 @@ export interface Event {
   createdAt: string;
 }
 /**
+ * The services shown on the Services page, in the menu and in the footer. Use "Order" to change the sequence.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "services".
  */
@@ -344,6 +352,8 @@ export interface Service {
   createdAt: string;
 }
 /**
+ * Board of Directors and management team shown on the About page.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "people".
  */
@@ -362,6 +372,8 @@ export interface Person {
   createdAt: string;
 }
 /**
+ * Regional, city and sectoral chambers shown in the Membership directory.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "members".
  */
@@ -383,6 +395,8 @@ export interface Member {
   createdAt: string;
 }
 /**
+ * Partner logos shown on the home page and the About page.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "partners".
  */
@@ -400,6 +414,8 @@ export interface Partner {
   createdAt: string;
 }
 /**
+ * PDF documents visitors can download from the Publications page.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "publications".
  */
@@ -423,6 +439,8 @@ export interface Publication {
   focalY?: number | null;
 }
 /**
+ * Messages sent by visitors from the Contact page. Change the status when you reply.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-messages".
  */
@@ -440,6 +458,8 @@ export interface ContactMessage {
   createdAt: string;
 }
 /**
+ * Emails of people who signed up for the newsletter.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "subscribers".
  */
@@ -451,6 +471,8 @@ export interface Subscriber {
   createdAt: string;
 }
 /**
+ * People who can log in to this admin. Administrators can manage users; editors can only edit content.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */

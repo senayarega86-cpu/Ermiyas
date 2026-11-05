@@ -4,7 +4,7 @@ import { anyone, isLoggedIn } from '../access'
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: 'Image', plural: 'Images' },
-  admin: { group: 'Library', defaultColumns: ['filename', 'alt', 'updatedAt'] },
+  admin: { description: 'All photos used on the website. Always add a short description.', group: 'Library', defaultColumns: ['filename', 'alt', 'updatedAt'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   fields: [
     { name: 'alt', label: 'Description (for accessibility & Google)', type: 'text', required: true, localized: true },

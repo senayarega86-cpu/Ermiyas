@@ -4,7 +4,7 @@ import { isLoggedIn } from '../access'
 export const ContactMessages: CollectionConfig = {
   slug: 'contact-messages',
   labels: { singular: 'Message', plural: 'Contact messages' },
-  admin: { useAsTitle: 'subject', group: 'Inbox', defaultColumns: ['name', 'email', 'topic', 'status', 'createdAt'] },
+  admin: { description: 'Messages sent by visitors from the Contact page. Change the status when you reply.', useAsTitle: 'subject', group: 'Inbox', defaultColumns: ['name', 'email', 'topic', 'status', 'createdAt'] },
   // Website visitors create messages through a server action; only staff can read them.
   access: { read: isLoggedIn, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: '-createdAt',

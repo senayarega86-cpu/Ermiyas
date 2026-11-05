@@ -14,7 +14,7 @@ export const NEWS_CATEGORIES = [
 export const News: CollectionConfig = {
   slug: 'news',
   labels: { singular: 'News article', plural: 'News' },
-  admin: { useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'category', 'publishedDate', '_status'] },
+  admin: { description: 'Write and publish news articles. Untick "Show in ticker" to keep an article out of the top news bar.', useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'category', 'publishedDate', '_status'] },
   access: {
     read: ({ req }) => (req.user ? true : { _status: { equals: 'published' } }),
     create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn,

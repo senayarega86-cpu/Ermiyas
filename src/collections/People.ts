@@ -5,7 +5,7 @@ import { orderField } from '../fields'
 export const People: CollectionConfig = {
   slug: 'people',
   labels: { singular: 'Person', plural: 'Board & Management' },
-  admin: { useAsTitle: 'name', group: 'Organization', defaultColumns: ['name', 'position', 'group', 'order'] },
+  admin: { description: 'Board of Directors and management team shown on the About page.', useAsTitle: 'name', group: 'Organization', defaultColumns: ['name', 'position', 'group', 'order'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: 'order',
   fields: [

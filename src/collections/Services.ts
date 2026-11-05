@@ -10,7 +10,7 @@ export const SERVICE_CATEGORIES = [
 
 export const Services: CollectionConfig = {
   slug: 'services',
-  admin: { useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'category', 'order'] },
+  admin: { description: 'The services shown on the Services page, in the menu and in the footer. Use "Order" to change the sequence.', useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'category', 'order'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: 'order',
   fields: [

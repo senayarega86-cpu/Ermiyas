@@ -4,7 +4,7 @@ import { isLoggedIn } from '../access'
 export const Subscribers: CollectionConfig = {
   slug: 'subscribers',
   labels: { singular: 'Newsletter subscriber', plural: 'Newsletter subscribers' },
-  admin: { useAsTitle: 'email', group: 'Inbox', defaultColumns: ['email', 'language', 'createdAt'] },
+  admin: { description: 'Emails of people who signed up for the newsletter.', useAsTitle: 'email', group: 'Inbox', defaultColumns: ['email', 'language', 'createdAt'] },
   access: { read: isLoggedIn, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: '-createdAt',
   fields: [

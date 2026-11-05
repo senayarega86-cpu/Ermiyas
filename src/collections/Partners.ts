@@ -4,7 +4,7 @@ import { orderField } from '../fields'
 
 export const Partners: CollectionConfig = {
   slug: 'partners',
-  admin: { useAsTitle: 'name', group: 'Organization', defaultColumns: ['name', 'url', 'order'] },
+  admin: { description: 'Partner logos shown on the home page and the About page.', useAsTitle: 'name', group: 'Organization', defaultColumns: ['name', 'url', 'order'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: 'order',
   fields: [

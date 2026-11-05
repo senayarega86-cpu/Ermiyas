@@ -4,7 +4,7 @@ import { isAdmin, isAdminField, isAdminOrSelf } from '../access'
 export const Users: CollectionConfig = {
   slug: 'users',
   labels: { singular: 'Admin user', plural: 'Admin users' },
-  admin: { useAsTitle: 'email', defaultColumns: ['name', 'email', 'role'], group: 'Settings' },
+  admin: { description: 'People who can log in to this admin. Administrators can manage users; editors can only edit content.', useAsTitle: 'email', defaultColumns: ['name', 'email', 'role'], group: 'Settings' },
   auth: true,
   access: {
     create: isAdmin,

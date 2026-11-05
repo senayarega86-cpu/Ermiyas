@@ -4,7 +4,7 @@ import { slugField } from '../fields'
 
 export const Events: CollectionConfig = {
   slug: 'events',
-  admin: { useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'startDate', 'location'] },
+  admin: { description: 'Trade fairs, forums and workshops. Upcoming and past events are sorted automatically by date.', useAsTitle: 'title', group: 'Content', defaultColumns: ['title', 'startDate', 'location'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: '-startDate',
   fields: [

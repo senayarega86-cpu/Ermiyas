@@ -37,6 +37,9 @@ export default buildConfig({
       icons: [{ rel: 'icon', type: 'image/png', url: '/favicon.png' }],
     },
     components: {
+      beforeDashboard: ['@/components/admin/Dashboard#Dashboard'],
+      afterNavLinks: ['@/components/admin/NavExtras#NavExtras'],
+      beforeLogin: ['@/components/admin/NavExtras#LoginIntro'],
       graphics: {
         Logo: '@/components/admin/Logo#Logo',
         Icon: '@/components/admin/Logo#Icon',

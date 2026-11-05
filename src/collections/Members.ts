@@ -12,7 +12,7 @@ export const MEMBER_TYPES = [
 export const Members: CollectionConfig = {
   slug: 'members',
   labels: { singular: 'Member chamber', plural: 'Member directory' },
-  admin: { useAsTitle: 'name', group: 'Organization', defaultColumns: ['name', 'type', 'phone'] },
+  admin: { description: 'Regional, city and sectoral chambers shown in the Membership directory.', useAsTitle: 'name', group: 'Organization', defaultColumns: ['name', 'type', 'phone'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: 'order',
   fields: [

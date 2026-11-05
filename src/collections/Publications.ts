@@ -14,7 +14,7 @@ export const PUBLICATION_CATEGORIES = [
 export const Publications: CollectionConfig = {
   slug: 'publications',
   labels: { singular: 'Publication (PDF)', plural: 'Publications' },
-  admin: { useAsTitle: 'title', group: 'Library', defaultColumns: ['title', 'category', 'publishedDate', 'filesize'] },
+  admin: { description: 'PDF documents visitors can download from the Publications page.', useAsTitle: 'title', group: 'Library', defaultColumns: ['title', 'category', 'publishedDate', 'filesize'] },
   access: { read: anyone, create: isLoggedIn, update: isLoggedIn, delete: isLoggedIn },
   defaultSort: '-publishedDate',
   upload: {
